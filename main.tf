@@ -42,7 +42,7 @@ resource "aws_instance" "web_server" {
   }
 }
 
-resource "aws_instance" "web_servernew1" {
+resource "aws_instance" "web_servernew11" {
   ami           = "ami-0888ba30fd446b771"  # Replace with a valid AMI ID
   instance_type = "t2.micro"
   subnet_id     = data.aws_subnet.existing_subnet_pub_2.id
