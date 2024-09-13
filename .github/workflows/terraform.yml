@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Updated to the latest version, future-proofing for Node.js 20
+        uses: actions/checkout@v2  # Updated to the latest version, future-proofing for Node.js 20
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2  # Updated to a newer version
