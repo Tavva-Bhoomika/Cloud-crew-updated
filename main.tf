@@ -1,3 +1,9 @@
+provider "aws" {
+  region  = "ap-south-1"  # Replace with your desired AWS region
+  # You can add more configuration options here if needed
+}
+
+
 # Fetch details of an existing VPC by ID
 data "aws_vpc" "existing" {
   id = "vpc-0edf9b3c6398c27d2"  # Replace with your VPC ID
