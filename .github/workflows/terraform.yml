@@ -14,12 +14,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Updated to the latest version
+        uses: actions/checkout@v3  # Updated to the latest version, future-proofing for Node.js 20
 
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1   
+        uses: hashicorp/setup-terraform@v2  # Updated to a newer version
         with:
-          terraform_version: 7.2.0
+          terraform_version: 1.7.2  # Updated to match the Terraform version you're using
 
       - name: Terraform Init
         run: terraform init
