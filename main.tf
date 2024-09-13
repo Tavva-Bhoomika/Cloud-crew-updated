@@ -29,10 +29,6 @@ data "aws_security_group" "existing_sg" {
   id = "sg-001a10ccf61956502"  # Replace with your Security Group ID
 }
 
-# Fetch details of an existing security group by ID
-data "aws_security_group" "Cloudcrew-EC2-Instance-1" {
-  id = "sg-0ee13bab74f9f2682"  # Replace with your Security Group ID
-}
 
 # Example: Launch an EC2 instance in the existing VPC
 resource "aws_instance" "web_server" {
