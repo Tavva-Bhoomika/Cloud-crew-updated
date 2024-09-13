@@ -42,14 +42,14 @@ resource "aws_instance" "web_server" {
   }
 }
 
-resource "aws_instance" "web_server11" {
+resource "aws_instance" "web_servernew" {
   ami           = "ami-0888ba30fd446b771"  # Replace with a valid AMI ID
   instance_type = "t2.micro"
   subnet_id     = data.aws_subnet.existing_subnet_pub_2.id
   vpc_security_group_ids = [data.aws_security_group.existing_sg.id]
 
   tags = {
-    Name = "web-server11"
+    Name = "web-servernew"
   }
 }
 
