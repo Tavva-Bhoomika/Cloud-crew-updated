@@ -10,7 +10,7 @@ on:
 
 jobs:
   terraform:
-    runs-on: self-hosted
+    runs-on: [self-hosted, amazon-linux-2]
 
     steps:
       - name: Checkout code
