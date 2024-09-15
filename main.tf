@@ -3,100 +3,47 @@ provider "aws" {
   region  = "ap-south-1"  # AWS region where resources will be deployed
 }
 
-# Create an S3 bucket for storing Terraform state
-resource "aws_s3_bucket" "terraform_state_bucket" {
-  bucket = "my-unique-terraform-state-bucket"  # Replace with a globally unique bucket name
-  acl    = "private"
-
-  versioning {
-    enabled = true
-  }
-
-  tags = {
-    Name = "Terraform State Bucket"
-  }
-}
-# Backend configuration to store Terraform state in S3
-terraform {
-  backend "s3" {
-    bucket         = aws_s3_bucket.terraform_state_bucket.id  # Referencing the S3 bucket created by Terraform
-    key            = "terraform.tfstate"
-    region         = "ap-south-1"
-    encrypt        = true
-    dynamodb_table = aws_dynamodb_table.terraform_locks.name  # DynamoDB table for state locking
-  }
+# Fetch the existing VPC
+data "aws_vpc" "existing_vpc" {
+  id = "vpc-0edf9b3c6398c27d2"  # Replace with your existing VPC ID
 }
 
-
-# Enable server-side encryption for the S3 bucket
-resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state_encryption" {
-  bucket = aws_s3_bucket.terraform_state_bucket.bucket
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
+# Fetch the existing public subnet
+data "aws_subnet" "public_subnet_1" {
+  id = "subnet-01f857f124f0f716c"  # Replace with your existing Public Subnet ID
 }
 
-# Create a DynamoDB table for state locking
-resource "aws_dynamodb_table" "terraform_locks" {
-  name         = "terraform-locks"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockID"
-
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
-
-  tags = {
-    Name = "Terraform Lock Table"
-  }
+# Fetch the existing public subnet
+data "aws_subnet" "public_subnet_2" {
+  id = "subnet-0f6ba87642ea02c34"  # Replace with your existing Public Subnet ID
 }
 
-# Fetch details of an existing VPC by ID
-data "aws_vpc" "existing" {
-  id = "vpc-0edf9b3c6398c27d2"  # Replace with your VPC ID
+# Fetch the existing private subnet (for RDS)
+data "aws_subnet" "private_subnet" {
+  id = "subnet-047b5451584742425"  # Replace with your existing Private Subnet ID
 }
 
-# Fetch details of existing subnets by IDs
-data "aws_subnet" "existing_subnet_pub_1" {
-  id = "subnet-01f857f124f0f716c"  # Replace with your Subnet ID
+# Fetch the existing EC2 instance
+data "aws_instance" "existing_web_server" {
+  instance_id = "i-0afa856aeec471ac6"  # Replace with your existing EC2 instance ID
 }
 
-data "aws_subnet" "existing_subnet_pub_2" {
-  id = "subnet-0f6ba87642ea02c34"  # Replace with your Subnet ID
+# Fetch the existing EC2 instance
+data "aws_instance" "existing_web_server" {
+  instance_id = "i-02aa7c4d6489b7ec8"  # Replace with your existing EC2 instance ID
 }
 
-data "aws_subnet" "existing_subnet_pvt" {
-  id = "subnet-047b5451584742425"  # Replace with your Subnet ID
+# Fetch the existing EC2 instance
+data "aws_instance" "existing_web_server" {
+  instance_id = "i-02301ca039d67d1f5"  # Replace with your existing EC2 instance ID
 }
 
-# Fetch details of an existing security group by ID
-data "aws_security_group" "existing_sg" {
-  id = "sg-001a10ccf61956502"  # Replace with your Security Group ID
+# Fetch the existing RDS instance
+data "aws_db_instance" "existing_rds" {
+  db_instance_identifier = "cloudcrew-rds-database"  # Replace with your existing RDS instance identifier
 }
 
-# Launch an EC2 instance in the existing VPC and subnet
-resource "aws_instance" "web_server" {
-  ami           = "ami-0888ba30fd446b771"  # Replace with a valid AMI ID
-  instance_type = "t2.micro"
-  subnet_id     = data.aws_subnet.existing_subnet_pub_2.id
-  vpc_security_group_ids = [data.aws_security_group.existing_sg.id]
-
-  tags = {
-    Name = "web-server"
-  }
-}
-
-resource "aws_instance" "web_servernew1" {
-  ami           = "ami-0888ba30fd446b771"  # Replace with a valid AMI ID
-  instance_type = "t2.micro"
-  subnet_id     = data.aws_subnet.existing_subnet_pub_2.id
-  vpc_security_group_ids = [data.aws_security_group.existing_sg.id]
-
-  tags = {
-    Name = "web-servernew1"
-  }
+# Fetch the existing S3 bucket
+data "aws_s3_bucket" "existing_website_bucket" {
+  bucket = "cloud-crew-static"  # Replace with your existing S3 bucket name
 }
