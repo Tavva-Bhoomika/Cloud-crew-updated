@@ -48,6 +48,19 @@ data "aws_s3_bucket" "existing_website_bucket" {
   bucket = "cloud-crew-static"  # Replace with your existing S3 bucket name
 }
 
+# Fetch the existing IAM role
+data "aws_iam_role" "existing_ec2_role1" {
+  name = "alarm-role"  # Replace with your existing EC2 role name
+}
+# Fetch the existing IAM role
+data "aws_iam_role" "existing_ec2_role2" {
+  name = "ec2-access"  # Replace with your existing EC2 role name
+}
+# Fetch the existing IAM role
+data "aws_iam_role" "existing_ec2_role3" {
+  name = "rds-monitoring-role"  # Replace with your existing EC2 role name
+}
+
 # Create an S3 bucket to store Terraform state
 resource "aws_s3_bucket" "terraform_state" {
   bucket_prefix = "my-terraform-state-"  # Unique prefix for bucket name
