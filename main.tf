@@ -1,13 +1,3 @@
-# Backend configuration to store Terraform state in S3
-terraform {
-  backend "s3" {
-    bucket         = aws_s3_bucket.terraform_state_bucket.id  # Referencing the S3 bucket created by Terraform
-    key            = "terraform.tfstate"
-    region         = "ap-south-1"
-    encrypt        = true
-    dynamodb_table = aws_dynamodb_table.terraform_locks.name  # DynamoDB table for state locking
-  }
-}
 
 provider "aws" {
   region  = "ap-south-1"  # AWS region where resources will be deployed
@@ -26,6 +16,17 @@ resource "aws_s3_bucket" "terraform_state_bucket" {
     Name = "Terraform State Bucket"
   }
 }
+# Backend configuration to store Terraform state in S3
+terraform {
+  backend "s3" {
+    bucket         = aws_s3_bucket.terraform_state_bucket.id  # Referencing the S3 bucket created by Terraform
+    key            = "terraform.tfstate"
+    region         = "ap-south-1"
+    encrypt        = true
+    dynamodb_table = aws_dynamodb_table.terraform_locks.name  # DynamoDB table for state locking
+  }
+}
+
 
 # Enable server-side encryption for the S3 bucket
 resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state_encryption" {
