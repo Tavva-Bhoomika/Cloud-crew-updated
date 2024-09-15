@@ -53,3 +53,17 @@ resource "aws_instance" "web_servernew1" {
   }
 }
 
+resource "aws_s3_bucket" "terraform_state" {
+  bucket = "my-terraform-state-bucket"
+  acl    = "private"
+  
+  versioning {
+    enabled = true
+  }
+
+  tags = {
+    Name = "Terraform State Bucket"
+  }
+}
+
+
