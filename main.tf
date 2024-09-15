@@ -1,17 +1,57 @@
-# Configure Terraform to store state in an S3 bucket and use DynamoDB for locking
+# Backend configuration to store Terraform state in S3
 terraform {
   backend "s3" {
-    bucket         = "my-unique-terraform-state-bucket"  # Replace with a unique S3 bucket name
+    bucket         = aws_s3_bucket.terraform_state_bucket.id  # Referencing the S3 bucket created by Terraform
     key            = "terraform.tfstate"
-    region         = "ap-south-1"  # Region where your S3 bucket is created
+    region         = "ap-south-1"
     encrypt        = true
-    dynamodb_table = "terraform-locks"  # Optional: DynamoDB table for state locking
+    dynamodb_table = aws_dynamodb_table.terraform_locks.name  # DynamoDB table for state locking
   }
 }
 
-# Provider configuration
 provider "aws" {
-  region = "ap-south-1"  # Replace with your desired AWS region
+  region  = "ap-south-1"  # AWS region where resources will be deployed
+}
+
+# Create an S3 bucket for storing Terraform state
+resource "aws_s3_bucket" "terraform_state_bucket" {
+  bucket = "my-unique-terraform-state-bucket"  # Replace with a globally unique bucket name
+  acl    = "private"
+
+  versioning {
+    enabled = true
+  }
+
+  tags = {
+    Name = "Terraform State Bucket"
+  }
+}
+
+# Enable server-side encryption for the S3 bucket
+resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state_encryption" {
+  bucket = aws_s3_bucket.terraform_state_bucket.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+# Create a DynamoDB table for state locking
+resource "aws_dynamodb_table" "terraform_locks" {
+  name         = "terraform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+
+  tags = {
+    Name = "Terraform Lock Table"
+  }
 }
 
 # Fetch details of an existing VPC by ID
@@ -37,7 +77,7 @@ data "aws_security_group" "existing_sg" {
   id = "sg-001a10ccf61956502"  # Replace with your Security Group ID
 }
 
-# Launch an EC2 instance in the existing VPC and Subnets
+# Launch an EC2 instance in the existing VPC and subnet
 resource "aws_instance" "web_server" {
   ami           = "ami-0888ba30fd446b771"  # Replace with a valid AMI ID
   instance_type = "t2.micro"
@@ -57,21 +97,5 @@ resource "aws_instance" "web_servernew1" {
 
   tags = {
     Name = "web-servernew1"
-  }
-}
-
-# Optional: DynamoDB table for state locking to ensure safe concurrent updates
-resource "aws_dynamodb_table" "terraform_locks" {
-  name         = "terraform-locks"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockID"
-
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
-
-  tags = {
-    Name = "Terraform Lock Table"
   }
 }
