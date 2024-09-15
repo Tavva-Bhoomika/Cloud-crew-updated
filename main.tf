@@ -76,7 +76,7 @@ resource "aws_dynamodb_table" "terraform_lock" {
 terraform {
   backend "s3" {
     bucket         = "my-terraform-state-20240915102923120200000001"  # Replace with your S3 bucket name
-    key            = "https://my-terraform-state-20240915102923120200000001.s3.ap-south-1.amazonaws.com/terraform+state/"             # Path within the bucket to store the state file
+    key            = "terraform/state/terraform.tfstate"             # Path within the bucket to store the state file
     region         = "ap-south-1"                   # AWS region of the S3 bucket
     dynamodb_table = "terraform-lock"               # Replace with your DynamoDB table name
     encrypt        = true                           # Enable server-side encryption
