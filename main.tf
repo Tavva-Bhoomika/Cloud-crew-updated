@@ -58,21 +58,6 @@ resource "aws_s3_bucket" "terraform_state" {
   }
 }
 
-# Create a DynamoDB table for state locking
-resource "aws_dynamodb_table" "terraform_lock" {
-  name         = "terraform-lock"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockID"
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
-
-  tags = {
-    Name = "terraform-lock-table"
-  }
-}
-
 terraform {
   backend "s3" {
     bucket         = "my-terraform-state-20240915102923120200000001"  # Replace with your S3 bucket name
