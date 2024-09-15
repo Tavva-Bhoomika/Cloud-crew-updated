@@ -47,3 +47,28 @@ data "aws_instance" "existing_web_server_3" {
 data "aws_s3_bucket" "existing_website_bucket" {
   bucket = "cloud-crew-static"  # Replace with your existing S3 bucket name
 }
+
+# Create an S3 bucket to store Terraform state
+resource "aws_s3_bucket" "terraform_state" {
+  bucket_prefix = "my-terraform-state-"  # Unique prefix for bucket name
+  acl           = "private"
+
+  tags = {
+    Name = "terraform-state-bucket"
+  }
+}
+
+# Create a DynamoDB table for state locking
+resource "aws_dynamodb_table" "terraform_lock" {
+  name         = "terraform-lock"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+
+  tags = {
+    Name = "terraform-lock-table"
+  }
+}
