@@ -92,7 +92,7 @@ resource "aws_instance" "new_web_server" {
   ami                    = "ami-0888ba30fd446b771"  # Amazon Linux 2 AMI
   instance_type          = "t2.micro"
   subnet_id              = data.aws_subnet.public_subnet_1.id  # Use existing public subnet
-  key_name               = "backendkey.pem"  # Replace with your existing key pair name
+  key_name               = "backendkey"  # Replace with your existing key pair name
   
   # Use vpc_security_group_ids instead of security_groups
   vpc_security_group_ids = [data.aws_security_group.existing_sg.id]
