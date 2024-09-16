@@ -54,6 +54,11 @@ data "aws_s3_bucket" "existing_website_bucket" {
   bucket = "cloud-crew-static"  # Replace with your existing S3 bucket name
 }
 
+# Fetch the existing S3 bucket
+data "aws_s3_bucket" "existing_website_bucket1" {
+  bucket = "cloudcrew-cloudfront-logs"  # Replace with your existing S3 bucket name
+}
+
 # Fetch the existing IAM role
 data "aws_iam_role" "existing_ec2_role1" {
   name = "alarm-role"  # Replace with your existing EC2 role name
