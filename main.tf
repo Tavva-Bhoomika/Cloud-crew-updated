@@ -38,10 +38,22 @@ data "aws_instance" "existing_web_server_4" {
   instance_id = "i-01453300c100fa958"  # Replace with your existing EC2 instance ID
 }
 
-# Fetch existing S3 buckets
-data "aws_s3_bucket" "existing_website_bucket" {
-  bucket = "cloud-crew-static"  # Replace with your existing S3 bucket name
+resource "aws_s3_bucket" "my_bucket" {
+  bucket = "Cloud-crew-StaticWebsite"  # Replace with your unique bucket name
+
+  # Enable versioning for the bucket
+  versioning {
+    enabled = true
+  }
+
+  # Define bucket-level tags
+  tags = {
+    Name        = "MyS3Bucket"
+    Environment = "Dev"
+  }
 }
+
+
 
 data "aws_s3_bucket" "existing_website_bucket1" {
   bucket = "cloudcrew-cloudfront-logs"  # Replace with your existing S3 bucket name
