@@ -7,6 +7,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
+
 // Database configuration
 $host = 'cloudcrew-rds-database.cluster-ctwcqkmykzvj.ap-south-1.rds.amazonaws.com';
 $db = 'cloudcrewdatabase';
@@ -27,7 +28,7 @@ try {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
-// Get the action from the request
+// Get the action from the request.
 $action = $_GET['action'] ?? '';
 
 switch ($action) {
@@ -61,12 +62,9 @@ function registerUser($pdo) {
         return;
     }
 
-    // Hash password before storing it
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
-    // Insert new user with hashed password
+    // Insert new user
     $stmt = $pdo->prepare("INSERT INTO customers (username, email, password) VALUES (?, ?, ?)");
-    if ($stmt->execute([$username, $email, $hashedPassword])) {
+    if ($stmt->execute([$username, $email, $password])) {
         echo json_encode(['message' => 'User registered successfully']);
     } else {
         echo json_encode(['message' => 'Registration failed']);
@@ -82,8 +80,7 @@ function loginUser($pdo) {
     $stmt->execute([$email]);
     $user = $stmt->fetch();
 
-    // Verify hashed password
-    if ($user && password_verify($password, $user['password'])) {
+    if ($user && $user['password'] === $password) {
         echo json_encode(['message' => 'Login successful']);
     } else {
         echo json_encode(['message' => 'Invalid email or password']);
@@ -95,3 +92,4 @@ function fetchProducts($pdo) {
     $products = $stmt->fetchAll();
     echo json_encode($products);
 }
+?>
