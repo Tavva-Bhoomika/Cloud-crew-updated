@@ -99,26 +99,3 @@ data "aws_security_group" "existing_sg" {
   vpc_id = data.aws_vpc.existing_vpc.id  # Ensure it matches the VPC of the security group
 }
 
-# Example: Create a new EC2 instance with existing security group
-resource "aws_instance" "new_web_server" {
-  ami                    = "ami-0888ba30fd446b771"  # Amazon Linux 2 AMI
-  instance_type          = "t2.micro"
-  subnet_id              = data.aws_subnet.public_subnet_1.id  # Use existing public subnet
-  key_name               = "backendkey"  # Replace with your existing key pair name
-  
-  # Use vpc_security_group_ids instead of security_groups
-  vpc_security_group_ids = [data.aws_security_group.existing_sg.id]
-
-  tags = {
-    Name = "NewWebServer"
-  }
-
-  # User data to install Apache on EC2 instance
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo yum update -y
-              sudo yum install -y httpd
-              sudo systemctl start httpd
-              echo "<h1>Hello, from Terraform EC2 instance</h1>" | sudo tee /var/www/html/index.html
-              EOF
-}
