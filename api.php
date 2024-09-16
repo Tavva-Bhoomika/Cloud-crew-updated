@@ -95,4 +95,3 @@ function fetchProducts($pdo) {
     $products = $stmt->fetchAll();
     echo json_encode($products);
 }
-?>
