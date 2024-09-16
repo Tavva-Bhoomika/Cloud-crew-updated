@@ -43,10 +43,9 @@ data "aws_instance" "existing_web_server_4" {
   instance_id = "i-01453300c100fa958"  # Replace with your existing EC2 instance ID
 }
 
-
-# Fetch the existing RDS instance
-data "aws_db_instance" "existing_rds" {
-  db_instance_identifier = "cloudcrew-rds-database"
+resource "aws_db_instance" "existing-rds" {
+  # Define only the essential parameters needed for the import
+  identifier = "cloudcrew-rds-database-instance-1"
 }
 
 # Fetch the existing S3 bucket
