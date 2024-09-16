@@ -46,7 +46,7 @@ data "aws_instance" "existing_web_server_4" {
 
 # Fetch the existing RDS instance
 data "aws_db_instance" "existing_rds" {
-  db_instance_identifier = "cloudcrew-rds-database"  # Replace with your existing RDS instance identifier
+  db_instance_identifier = "cloudcrew-rds-database"
 }
 
 # Fetch the existing S3 bucket
