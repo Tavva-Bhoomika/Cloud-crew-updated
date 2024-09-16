@@ -56,7 +56,7 @@ resource "aws_s3_bucket" "my_bucket" {
 
 
 data "aws_s3_bucket" "existing_website_bucket1" {
-  bucket = "cloudcrew-cloudfront-logs"  # Replace with your existing S3 bucket name
+  bucket = "clowcrew-logs"  # Replace with your existing S3 bucket name
 }
 
 # Fetch existing IAM roles
