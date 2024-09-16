@@ -60,41 +60,7 @@ resource "aws_s3_bucket_public_access_block" "my_bucket_access_block" {
   block_public_policy     = true
   restrict_public_buckets = true
 }
-resource "aws_s3_bucket_policy" "my_bucket_policy" {
-  bucket = aws_s3_bucket.my_bucket.id
 
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = "*",
-        Action = "s3:GetObject",
-        Resource = "${aws_s3_bucket.my_bucket.arn}/*",
-        Condition = {
-          IpAddress = {
-            "aws:SourceIp": "203.0.113.0/24"  # Replace with the IP address or range you want to allow
-          }
-        }
-      }
-    ]
-  })
-}
-
-# Define a separate bucket for logging
-resource "aws_s3_bucket" "logging_bucket" {
-  bucket = "cloud-crew-logging-bucket"  # Replace with a unique name for the logging bucket
-
-  # Enable versioning for the bucket
-  versioning {
-    enabled = true
-  }
-
-  # Define bucket-level tags
-  tags = {
-    Name = "LoggingBucket"
-  }
-}
 
 data "aws_s3_bucket" "existing_website_bucket1" {
   bucket = "clowcrew-logs"  # Replace with your existing S3 bucket name
