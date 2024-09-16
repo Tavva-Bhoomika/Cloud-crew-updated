@@ -100,7 +100,7 @@ terraform {
     region         = "ap-south-1"  # Replace with your AWS region
   }
 }
-resource "aws_s3_bucket_public_access_block" "my_bucket_access_block" {
+resource "aws_s3_bucket_public_access_block" "my_bucket_access_block1" {
   bucket = aws_s3_bucket.terraform_state.id
 
   block_public_acls       = true
