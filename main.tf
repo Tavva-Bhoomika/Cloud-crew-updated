@@ -28,16 +28,6 @@ data "aws_instance" "existing_web_server_1" {
   instance_id = "i-0afa856aeec471ac6"  # Replace with your existing EC2 instance ID
 }
 
-# Fetch the existing EC2 instance
-data "aws_instance" "existing_web_server_2" {
-  instance_id = "i-02aa7c4d6489b7ec8"  # Replace with your existing EC2 instance ID
-}
-
-# Fetch the existing EC2 instance
-data "aws_instance" "existing_web_server_3" {
-  instance_id = "i-02301ca039d67d1f5"  # Replace with your existing EC2 instance ID
-}
-
 # Fetch the existing RDS instance
 #data "aws_db_instance" "existing_rds" {
 #  db_instance_identifier = "cloudcrew-rds-database"  # Replace with your existing RDS instance identifier
