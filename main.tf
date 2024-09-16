@@ -80,7 +80,7 @@ terraform {
 
 # Example: Create a new EC2 instance
 resource "aws_instance" "new_web_server" {
-  ami                    = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI
+  ami                    = "ami-0888ba30fd446b771"  # Amazon Linux 2 AMI
   instance_type          = "t2.micro"
   subnet_id              = data.aws_subnet.public_subnet_1.id  # Use existing public subnet
   key_name               = "my-key-pair"  # Replace with your existing key pair name
@@ -132,7 +132,7 @@ resource "aws_security_group" "allow_ssh_http" {
 
 # Attach Security Group to the new EC2 instance
 resource "aws_instance" "new_ec2_instance" {
-  ami                    = "ami-0c55b159cbfafe1f0"  # Replace with appropriate AMI ID
+  ami                    = "ami-0888ba30fd446b771"  # Replace with appropriate AMI ID
   instance_type          = "t2.micro"
   subnet_id              = data.aws_subnet.public_subnet_1.id
   key_name               = "my-key-pair"  # Replace with your key pair name
