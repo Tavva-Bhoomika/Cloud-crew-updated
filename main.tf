@@ -39,7 +39,7 @@ data "aws_instance" "existing_web_server_4" {
 }
 
 resource "aws_s3_bucket" "my_bucket" {
-  bucket = "Cloud-crew-StaticWebsite"  # Replace with your unique bucket name
+  bucket = "cloud-crew-staticwebsite"  # Replace with your unique bucket name
 
   # Enable versioning for the bucket
   versioning {
