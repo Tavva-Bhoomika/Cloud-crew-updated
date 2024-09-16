@@ -43,9 +43,67 @@ data "aws_instance" "existing_web_server_4" {
   instance_id = "i-01453300c100fa958"  # Replace with your existing EC2 instance ID
 }
 
-resource "aws_db_instance" "existing-rds" {
-  # Define only the essential parameters needed for the import
-  identifier = "cloudcrew-rds-database-instance-1"
+resource "aws_db_instance" "example" {
+  identifier              = "cloudcrew-rds-database-instance-1"
+  instance_class          = "db.t3.medium"
+  engine                  = "aurora-mysql"
+  engine_version          = "8.0.mysql_aurora.3.05.2"
+  allocated_storage       = 1
+  db_subnet_group_name    = "default-vpc-0edf9b3c6398c27d2"
+  db_name                 = "your-database-name" # Specify if applicable
+  username                = "admin"
+  password                = "your-password" # Use sensitive values or environment variables
+  parameter_group_name    = "default.aurora-mysql8.0"
+  backup_retention_period = 1
+  preferred_backup_window = "21:53-22:23"
+  preferred_maintenance_window = "thu:12:02-thu:12:32"
+  multi_az                = false
+  auto_minor_version_upgrade = true
+  publicly_accessible     = false
+  storage_type            = "aurora"
+  db_cluster_identifier   = "cloudcrew-rds-database"
+  storage_encrypted       = true
+  kms_key_id              = "arn:aws:kms:ap-south-1:026090544238:key/4b06577d-d3fe-4f97-b312-636fa03df05b"
+  ca_certificate_identifier = "rds-ca-rsa2048-g1"
+  delete_automated_backups = false
+  copy_tags_to_snapshot   = false
+  monitoring_interval     = 0
+  promotion_tier          = 1
+  db_instance_arn         = "arn:aws:rds:ap-south-1:026090544238:db:cloudcrew-rds-database-instance-1"
+  iam_database_authentication_enabled = false
+  performance_insights_enabled = false
+  deletion_protection     = false
+  customer_owned_ip_enabled = false
+  network_type            = "IPV4"
+  storage_throughput      = 0
+  dedicated_log_volume   = false
+
+  vpc_security_group_ids = [
+    "sg-0c3161c9a134f3a6f",
+    "sg-0491ee7e2bc459e4a"
+  ]
+
+  tags = {
+    Name = "cloudcrew-rds-database-instance-1"
+  }
+}
+
+resource "aws_db_subnet_group" "example" {
+  name        = "default-vpc-0edf9b3c6398c27d2"
+  description = "Created from the RDS Management Console"
+  subnet_ids  = [
+    "subnet-0f6ba87642ea02c34",
+    "subnet-047b5451584742425",
+    "subnet-01f857f124f0f716c"
+  ]
+}
+
+output "db_instance_endpoint" {
+  value = aws_db_instance.example.endpoint
+}
+
+output "db_instance_arn" {
+  value = aws_db_instance.example.arn
 }
 
 # Fetch the existing S3 bucket
