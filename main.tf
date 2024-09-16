@@ -52,7 +52,14 @@ resource "aws_s3_bucket" "my_bucket" {
     Environment = "Dev"
   }
 }
+resource "aws_s3_bucket_public_access_block" "my_bucket_access_block" {
+  bucket = aws_s3_bucket.my_bucket.id
 
+  block_public_acls       = true
+  ignore_public_acls      = true
+  block_public_policy     = true
+  restrict_public_buckets = true
+}
 
 
 data "aws_s3_bucket" "existing_website_bucket1" {
@@ -92,6 +99,14 @@ terraform {
     key            = "terraform/state/terraform.tfstate"  # Path within the bucket to store the state file
     region         = "ap-south-1"  # Replace with your AWS region
   }
+}
+resource "aws_s3_bucket_public_access_block" "my_bucket_access_block" {
+  bucket = aws_s3_bucket.terraform_state.id
+
+  block_public_acls       = true
+  ignore_public_acls      = true
+  block_public_policy     = true
+  restrict_public_buckets = true
 }
 
 # Fetch existing security group by name
