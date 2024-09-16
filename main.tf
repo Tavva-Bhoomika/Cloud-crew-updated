@@ -93,7 +93,7 @@ resource "aws_instance" "new_web_server" {
   instance_type          = "t2.micro"
   subnet_id              = data.aws_subnet.public_subnet_1.id  # Use existing public subnet
   key_name               = "backendkey.pem"  # Replace with your existing key pair name
-  security_groups        = [aws_security_group.existing_sg]
+  security_groups        = [data.aws_security_group.existing_sg]
   tags = {
     Name = "NewWebServer"
   }
