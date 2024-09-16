@@ -78,13 +78,22 @@ terraform {
   }
 }
 
+# Fetch existing security group by name
+data "aws_security_group" "existing_sg" {
+  filter {
+    name   = "group-name"
+    values = ["sonarqube"]  # Replace with your existing security group name
+  }
+  vpc_id = data.aws_vpc.existing_vpc.id  # Ensure it matches the VPC of the security group
+}
+
 # Example: Create a new EC2 instance
 resource "aws_instance" "new_web_server" {
   ami                    = "ami-0888ba30fd446b771"  # Amazon Linux 2 AMI
   instance_type          = "t2.micro"
   subnet_id              = data.aws_subnet.public_subnet_1.id  # Use existing public subnet
-  key_name               = "my-key-pair"  # Replace with your existing key pair name
-
+  key_name               = "backendkey.pem"  # Replace with your existing key pair name
+  security_groups        = [aws_security_group.existing_sg]
   tags = {
     Name = "NewWebServer"
   }
@@ -100,58 +109,5 @@ resource "aws_instance" "new_web_server" {
               EOF
 }
 
-# Example: Create a Security Group
-resource "aws_security_group" "allow_ssh_http" {
-  vpc_id = data.aws_vpc.existing_vpc.id
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Allow SSH from anywhere (you may restrict this)
-  }
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Allow HTTP from anywhere
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "allow_ssh_http"
-  }
-}
-
-# Attach Security Group to the new EC2 instance
-resource "aws_instance" "new_ec2_instance" {
-  ami                    = "ami-0888ba30fd446b771"  # Replace with appropriate AMI ID
-  instance_type          = "t2.micro"
-  subnet_id              = data.aws_subnet.public_subnet_1.id
-  key_name               = "my-key-pair"  # Replace with your key pair name
-  security_groups        = [aws_security_group.allow_ssh_http.name]
-
-  tags = {
-    Name = "NewEC2Instance"
-  }
-
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo yum update -y
-              sudo yum install -y httpd
-              sudo systemctl start httpd
-              echo "<h1>Hello, from Terraform EC2 instance</h1>" | sudo tee /var/www/html/index.html
-              EOF
-}
-
-# Output the new EC2 instance's public IP
-output "ec2_public_ip" {
-  value = aws_instance.new_ec2_instance.public_ip
-}
