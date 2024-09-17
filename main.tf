@@ -76,15 +76,15 @@ data "aws_iam_role" "existing_ec2_role3" {
   name = "rds-monitoring-role"  # Replace with your existing EC2 role name
 }
 
-# Create an S3 bucket to store Terraform state
-#resource "aws_s3_bucket" "terraform_state" {
-#  bucket_prefix = "my-terraform-state-"  # Unique prefix for bucket name
-#  acl           = "private"
+#Create an S3 bucket to store Terraform state
+resource "aws_s3_bucket" "terraform_state" {
+  bucket_prefix = "my-terraform-state-"  # Unique prefix for bucket name
+  acl           = "private"
 
-#  tags = {
-#    Name = "terraform-state-bucket"
-#  }
-#}
+  tags = {
+    Name = "terraform-state-bucket"
+  }
+}
 
 terraform {
   backend "s3" {
